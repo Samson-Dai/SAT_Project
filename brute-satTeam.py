@@ -43,14 +43,12 @@ def gen_assignment(power,result):
         print result
         return
     else:
-        print "Power is "+ str(power) +"Result is " 
-        print result
-        new_result1 = result
-        new_result0 = result
-        new_result1.append(1)
-        new_result0.append(0)
-        gen_assignment(power-1, new_result0)
-        gen_assignment(power-1, new_result1)
+        new1 = result[:]  #need to creat new variable
+        new1.append(1)
+        new0 = result[:]
+        new0.append(0)
+        gen_assignment(power-1, new0)
+        gen_assignment(power-1, new1)
 
 
 print "This is the name of the script: ", sys.argv[0]
