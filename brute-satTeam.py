@@ -1,4 +1,6 @@
+#!/usr/bin/python
 import sys
+import time
 
 def read_wff(line):
     global promb_counter, problem_list, problem_info
@@ -29,6 +31,8 @@ def solving_problem(running_mode):
         for p in problem_list:
             #print "index is " + str(problem_list.index(p))
             #print p 
+            time_start1 = time.time() * 1000000
+            
             var_num_int = int(p["var_num"])
             if(var_num_int<=8):
                 init_str = bin(0)[2:].zfill(var_num_int)
@@ -41,15 +45,36 @@ def solving_problem(running_mode):
                 print "Question No " + p["promb_num"]
                 print "Correct Answer is "+ p["test_char"]
                 if (found):
-                    print "Our Answer is S\n\n"
+                    print "Our Answer is S"
                 else:
-                    print "Our Answer is U\n\n"
-                
+                    print "Our Answer is U"
+                time_taken1 = time.time()*1000000 - time_start1
+                print "The time it take is : " + str(time_taken1) + " microsecond\n\n"
                 # use gen_next_assign() and verify() functions to verify clsuses
                 #print init_str
 
     elif(running_mode =='0'):
-        print "not"
+        for p in problem_list:
+            #print "index is " + str(problem_list.index(p))
+            #print p 
+            time_start0 = time.time() * 1000000
+            
+            var_num_int = int(p["var_num"])
+            init_str = bin(0)[2:].zfill(var_num_int)
+            found = False
+            while (found==False and init_str!="final"):
+                found = verify(p["clauses"],init_str)
+                init_str = gen_next_assign(init_str, var_num_int);
+            
+            print "Question No " + p["promb_num"]
+            print "Correct Answer is "+ p["test_char"]
+            if (found):
+                print "Our Answer is S"
+            else:
+                print "Our Answer is U"
+            time_taken0 = time.time() * 1000000 - time_start0
+
+            print "The time it take is : " + str(time_taken0) + " microsecond\n\n"
 
 def verify (wff,assignment):
     for clause in wff:
