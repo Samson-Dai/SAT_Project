@@ -32,19 +32,52 @@ def solving_problem(running_mode):
             var_num_int = int(p["var_num"])
             if(var_num_int<=8):
                 init_str = bin(0)[2:].zfill(var_num_int)
+                found = False
+                
+                while (found==False and init_str!="final"):
+                    found = verify(p["clauses"],init_str)
+                    init_str = gen_next_assign(init_str, var_num_int);
+                
+                print "Question No " + p["promb_num"]
+                print "Correct Answer is "+ p["test_char"]
+                if (found):
+                    print "Our Answer is S\n\n"
+                else:
+                    print "Our Answer is U\n\n"
+                
                 # use gen_next_assign() and verify() functions to verify clsuses
-                print init_str
+                #print init_str
 
     elif(running_mode =='0'):
         print "not"
 
+def verify (wff,assignment):
+    for clause in wff:
+        verified = False
+        for value in clause:
+            v_int = int(value)
+            v_abs = abs(v_int)
+            ass_value = int (assignment[v_abs-1])
+            if (v_int<0):
+                ass_value = 1-ass_value
+            if (ass_value == 1):
+                verified = True
+                break
+        if (verified == False):
+            return False
+    return True
+
 
 
 #use binary string to represent the assignment
-def gen_next_assign(bin_str):
-    #transform bin_str to decimal numbers, add 1 and transfer back
-    # should stop if we come to all 1 , like "1111" for v=4
-    print "hi"
+def gen_next_assign(bin_str, var_num_int):
+    if ("0" not in bin_str):
+        return "final"
+    else:
+        int_str = int(bin_str,2)
+        int_str += 1 
+        new_str = bin(int_str)[2:].zfill(var_num_int)
+        return new_str
 
 
 
