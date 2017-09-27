@@ -31,7 +31,7 @@ def solving_problem(running_mode):
         for p in problem_list:
             #print "index is " + str(problem_list.index(p))
             #print p 
-            time_start1 = time.time() * 1000000
+            time_start = time.time() * 1000000
             
             var_num_int = int(p["var_num"])
             if(var_num_int<=8):
@@ -41,23 +41,50 @@ def solving_problem(running_mode):
                 while (found==False and init_str!="final"):
                     found = verify(p["clauses"],init_str)
                     init_str = gen_next_assign(init_str, var_num_int);
-                
-                print "Question No " + p["promb_num"]
-                print "Correct Answer is "+ p["test_char"]
+               
+                time_taken = time.time()*1000000 - time_start
+                assgn_list = list(init_str)
+                prediction = "U"
+                pre_match = "0"
                 if (found):
-                    print "Our Answer is S"
-                else:
-                    print "Our Answer is U"
-                time_taken1 = time.time()*1000000 - time_start1
-                print "The time it take is : " + str(time_taken1) + " microsecond\n\n"
-                # use gen_next_assign() and verify() functions to verify clsuses
-                #print init_str
+                    prediction = "S"
+                if (p["test_char"]!="?"):
+                    if(p["test_char"]==prediction):
+                        pre_match = "1"
+                    else:
+                        pre_match = "-1"
+
+
+                output_info ={
+                    "promb_num": p["promb_num"],
+                    "var_num" : p["var_num"],
+                    "clause_num" : p["clause_num"],
+                    "max_num_li": p["max_num_li"],
+                    #"total_num_li": todo,
+                    "prediction": prediction,
+                    "pre_match": pre_match,
+                    "time_taken": time_taken,
+                    "assignment": assgn_list,
+                    "clauses": [["1","2"],["-2","5"]]
+                }
+        last_line = {
+            "last_line": "last",
+            "input_file": sys.argv[1],
+            "team_name": "satTeam",
+            # num of wffs
+            #S num
+            #U num
+            #wff has answer
+            #answers correct 
+
+        }
+                
 
     elif(running_mode =='0'):
         for p in problem_list:
             #print "index is " + str(problem_list.index(p))
             #print p 
-            time_start0 = time.time() * 1000000
+            time_start = time.time() * 1000000
             
             var_num_int = int(p["var_num"])
             init_str = bin(0)[2:].zfill(var_num_int)
@@ -66,15 +93,31 @@ def solving_problem(running_mode):
                 found = verify(p["clauses"],init_str)
                 init_str = gen_next_assign(init_str, var_num_int);
             
-            print "Question No " + p["promb_num"]
-            print "Correct Answer is "+ p["test_char"]
-            if (found):
-                print "Our Answer is S"
-            else:
-                print "Our Answer is U"
-            time_taken0 = time.time() * 1000000 - time_start0
+            time_taken = time.time()*1000000 - time_start
+                assgn_list = list(init_str)
+                prediction = "U"
+                pre_match = "0"
+                if (found):
+                    prediction = "S"
+                if (p["test_char"]!="?"):
+                    if(p["test_char"]==prediction):
+                        pre_match = "1"
+                    else:
+                        pre_match = "-1"
 
-            print "The time it take is : " + str(time_taken0) + " microsecond\n\n"
+
+                output_info ={
+                    "promb_num": p["promb_num"],
+                    "var_num" : p["var_num"],
+                    "clause_num" : p["clause_num"],
+                    "max_num_li": p["max_num_li"],
+                    #"total_num_li": todo,
+                    "prediction": prediction,
+                    "pre_match": pre_match,
+                    "time_taken": time_taken,
+                    "assignment": assgn_list,
+                    "clauses": [["1","2"],["-2","5"]]
+                }
 
 def verify (wff,assignment):
     for clause in wff:
@@ -93,7 +136,6 @@ def verify (wff,assignment):
     return True
 
 
-
 #use binary string to represent the assignment
 def gen_next_assign(bin_str, var_num_int):
     if ("0" not in bin_str):
@@ -103,6 +145,8 @@ def gen_next_assign(bin_str, var_num_int):
         int_str += 1 
         new_str = bin(int_str)[2:].zfill(var_num_int)
         return new_str
+
+def gen_output()
 
 
 
