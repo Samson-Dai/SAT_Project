@@ -1,5 +1,5 @@
 c 1 2 ?# c indicates the comment line, 1 indicates problem number, 2 indicates maximum number of literals, questino mark indicates whether it is satisfiable or unsatisfiable.
-p cnf 8 4# P indicates the problem line, cnf indicates the type of file, 8 indicates number of variables, and 3 indicates number of clauses
+p cnf 8 4# P indicates the problem line, cnf indicates the type of file, 8 indicates number of variables, and 4 indicates number of clauses
 1,2,0# this is the clause x111 or x112
 3,4,0# x121 or x122
 5,6,0# x211 or x212
