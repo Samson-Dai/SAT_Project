@@ -1,9 +1,9 @@
-c 1 2 ?
-p cnf 8 4
-1,2,0
-3,4,0
-5,6,0
-7,8,0
+c 1 2 ?# c indicates the comment line, 1 indicates problem number, 2 indicates maximum number of literals, questino mark indicates whether it is satisfiable or unsatisfiable.
+p cnf 8 4# P indicates the problem line, cnf indicates the type of file, 8 indicates number of variables, and 3 indicates number of clauses
+1,2,0# this is the clause x111 or x112
+3,4,0# x121 or x122
+5,6,0# x211 or x212
+7,8,0# x221 or x222
 c 2 2 ?
 p cnf 8 4
 -1,-2,0
@@ -11,7 +11,7 @@ p cnf 8 4
 -5,-6,0
 -7,-8,0
 c 3 2 ?
-p cnf 4 4
+p cnf 4 4# here we only have 4 numbers of variables
 1,3,0
 2,4,0
 -1,-3,0

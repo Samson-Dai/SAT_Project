@@ -3,23 +3,23 @@ import sys
 import time
 
 
-def read_wff(line):
+def read_wff(line):#this function reads in wff and divides each attributes and store them into different variables.
     global promb_counter, problem_list, problem_info
-    if (line[0] == 'c'):
+    if (line[0] == 'c'):#dividing the comment line
         line_list = line.split()
         problem_info = {}
-        problem_info["clauses"] = []  # init clauses
+        problem_info["clauses"] = []  # initial clauses
         problem_info["total_num_li"] = 0
         problem_list.append(problem_info)  # append a new problem in the list
         problem_info["promb_num"] = line_list[1]
         problem_info["max_num_literal"] = line_list[2]
         problem_info["test_char"] = line_list[3]
         promb_counter += 1
-    elif (line[0] == "p"):
+    elif (line[0] == "p"):#dividing the problem
         line_list = line.split()
         problem_info["var_num"] = line_list[2]
         problem_info["clause_num"] = line_list[3]
-    else:
+    else:# this divides each clause since it is not noted with any p or c character
         line_list = line.split(',')
         problem_info["total_num_li"] += len(line_list) - 1
         a_clause = []
@@ -28,7 +28,7 @@ def read_wff(line):
         problem_info["clauses"].append(a_clause)
 
 
-def solving_problem(running_mode):
+def solving_problem(running_mode):#this functions solves the problem.
     global promb_counter, problem_list
     
     s_wff = 0
@@ -36,20 +36,20 @@ def solving_problem(running_mode):
     a_wff = 0
     c_wff = 0
 
-    for p in problem_list:
+    for p in problem_list:#going through every problem in problem list.
         var_num_int = int(p["var_num"])
-        if (running_mode=="0" or (running_mode=="1" and var_num_int<=8 )):
+        if (running_mode=="0" or (running_mode=="1" and var_num_int<=8 )):#check the running mode
             print "For promblem" + p["promb_num"]
-            time_start = time.time() * 1000000
+            time_start = time.time() * 1000000#setting up the initial time
             
             init_str = bin(0)[2:].zfill(var_num_int)
-            found = False
+            found = False#incidcating variable for finding prediction(satisfiable or unsatisfiable.)
             
             while (found==False and init_str!="final"):
                 found = verify(p["clauses"],init_str)
                 init_str = gen_next_assign(init_str, var_num_int);
            
-            time_taken = time.time()*1000000 - time_start
+            time_taken = time.time()*1000000 - time_start#computes the time taken by subtracting initial time.
             assgn_list = []
             prediction = "U"
             pre_match = "0"
@@ -67,7 +67,7 @@ def solving_problem(running_mode):
                 else:
                     pre_match = "-1"
 
-            output_info ={
+            output_info ={#output info parsing
                 "promb_num": p["promb_num"],
                 "var_num" : p["var_num"],
                 "clause_num" : p["clause_num"],
@@ -80,7 +80,7 @@ def solving_problem(running_mode):
             }
             gen_output_row(output_info)
     #end of all problem
-    last_line = {
+    last_line = {#last line info parsing
         "input_file": sys.argv[1].replace(".cnf",""),
         "team_name": "satTeam",
         "total_wff": len(problem_list),
@@ -92,7 +92,7 @@ def solving_problem(running_mode):
     gen_last_row(last_line)
 
 
-def verify(wff, assignment):
+def verify(wff, assignment):#verify function by comapring v_int and value.
     for clause in wff:
         verified = False
         for value in clause:
@@ -119,7 +119,7 @@ def gen_next_assign(bin_str, var_num_int):
         new_str = bin(int_str)[2:].zfill(var_num_int)
         return new_str
 
-
+#function to generate output. Using append in this function
 def gen_output_row(output_info):
     global output_file
     output_file.write(output_info["promb_num"] + ",")
@@ -133,7 +133,7 @@ def gen_output_row(output_info):
     for i in output_info["assignment"] :
         output_file.write(str(i) + ",")
     output_file.write("\n")
-
+#generating last row by taking the last line
 def gen_last_row(last_line):
     global output_file
     output_file.write(last_line["input_file"] + ",")
@@ -147,18 +147,6 @@ def gen_last_row(last_line):
 promb_counter = 0
 problem_list = []
 problem_info = {"clauses": []}
-
-"""
-problem_info ={
-    "promb_num": "1",
-    "max_num_literal": "4",
-    "test_char" : "S",
-    "var_num" : "6",
-    "clause_num" : "9",
-    "clauses": [["1","2"],["-2","5"]]
-}
-"""
-
 file_name = sys.argv[1]
 running_mode = sys.argv[2]
 test_file = open(file_name, "r")
