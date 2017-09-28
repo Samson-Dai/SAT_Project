@@ -39,7 +39,7 @@ def solving_problem(running_mode):
     for p in problem_list:
         var_num_int = int(p["var_num"])
         if (running_mode=="0" or (running_mode=="1" and var_num_int<=8 )):
-            print "For promblem" + p["promb_num"]
+            #print "For promblem" + p["promb_num"]
             time_start = time.time() * 1000000
             
             init_str = bin(0)[2:].zfill(var_num_int)
@@ -171,7 +171,7 @@ except:
     print "Cannot read the file"
 finally:
     test_file.close()
-    output_file = open("brute-satTeam.csv", "w")
+    output_file = open(sys.argv[1].replace(".cnf",".csv"), "w")
 
 solving_problem(running_mode)
 output_file.close()
