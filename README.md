@@ -20,3 +20,10 @@ wffs-list and assignments for wffs are binary strings(brute) which are also a li
 assignments-for backtrack file, the assignments are contained in stack so we did not use any data structures for assignments particularly.
 However, stacks are the lists of dictionaries. Therefore, assignments are used in the means of choice point stacks.
 choice point stacks- we selected the first literal in the first clause which is contained in the list of clauses.
+
+#6
+
+#7
+#Brute Force time complexity O(2^V*C*K)  ...//v=number of variables, c=number of clauses, k=number of literals per clause.
+#8
+For the relative complexity of the different solvers, especially as a function of the number of literals per clause.
