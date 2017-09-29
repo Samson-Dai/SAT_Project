@@ -160,7 +160,9 @@ problem_info ={
 """
 
 file_name = sys.argv[1]
-running_mode = sys.argv[2]
+running_mode = "0"
+if (len(sys.argv) >2):
+    running_mode = sys.argv[2]
 test_file = open(file_name, "r")
 
 
@@ -172,7 +174,7 @@ except:
 finally:
     test_file.close()
     output_file_title = sys.argv[1].replace(".cnf",".csv")
-    output_file_title = "brute_"+output_file_title
+    output_file_title = "brute_"+output_file_title 
     output_file = open(output_file_title, "w")
 
 solving_problem(running_mode)

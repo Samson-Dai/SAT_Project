@@ -204,7 +204,9 @@ promb_counter = 0
 problem_list = []
 problem_info = {"clauses": []}
 file_name = sys.argv[1]
-running_mode = sys.argv[2]
+running_mode = "0"
+if (len(sys.argv) >2):
+    running_mode = sys.argv[2]
 test_file = open(file_name, "r")
 
 try:
