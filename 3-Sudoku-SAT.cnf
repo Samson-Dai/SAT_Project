@@ -1,4 +1,0 @@
-# 3vs3 sudoku
-c 1 2 ?
-p cnf 729 324#need to compute the totla number of clauses
-http://cmsc-16100.cs.uchicago.edu/2015/Lectures/27-sudoku.php

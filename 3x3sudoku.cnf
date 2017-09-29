@@ -1,0 +1,10 @@
+# 3vs3 sudoku
+c 1 2 ?
+p cnf 729 324#need to compute the totla number of clauses
+
+1,2,3,4,5,6,7,8,9,0#Position constraints...each position contains precisely one value
+11,12,13,14,15,16,17,18,19,0#another check for position constraints
+221,222,223,224,225,226,227,228,229,0#position constraints...@ position(2,2)...one value between 1 and 9
+315,325,335,345,355,365,375,385,395,0#row values constraints: in each row, each value occurs precisely once... 5 occurs once in the 3rd-row
+172,272,372,472,572,672,772,872,972,0#column-value constraints....2 occurs once in the 7th column
+449,459,469,549,559,569,649,659,669,0#Block-value constraints...9 occurs exactly once in the central block
