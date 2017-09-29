@@ -1,0 +1,11 @@
+Problem 1000
+In update_assign, the original is ['-1', '-1', '-1', '-1']
+set 4 to 0
+The result is ['-1', '-1', '-1', '0']
+Current set value wff is [['-4', '4'], ['1', '2'], ['-2', '2'], ['-4', '-3'], ['-4', '1'], ['2', '-4'], ['1', '-2'], ['1', '2'], ['-1', '-3']]
+Current clause is : ['-4', '4']
+The assign_list is ['-1', '-1', '-1', '0']
+-4 is matched WE sre moving ['-4', '4']
+After remove we have wff as [['1', '2'], ['-2', '2'], ['-4', '-3'], ['-4', '1'], ['2', '-4'], ['1', '-2'], ['1', '2'], ['-1', '-3']]
+The assign_list is ['-1', '-1', '-1', '0']
+4 is removed, do forcing

@@ -171,7 +171,9 @@ except:
     print "Cannot read the file"
 finally:
     test_file.close()
-    output_file = open(sys.argv[1].replace(".cnf",".csv"), "w")
+    output_file_title = sys.argv[1].replace(".cnf",".csv")
+    output_file_title = "brute_"+output_file_title
+    output_file = open(output_file_title, "w")
 
 solving_problem(running_mode)
 output_file.close()

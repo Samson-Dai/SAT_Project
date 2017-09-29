@@ -41,6 +41,7 @@ def solving_problem(running_mode):
             print "Problem " + p["promb_num"]
             time_start = time.time() * 1000000
             current_wff = p["clauses"]
+            assign_list = ["-1"]*int(p["var_num"])
             stack = []
             new_var_name = current_wff[0][0]
             new_var_name = str(abs(int(new_var_name)))
@@ -50,41 +51,52 @@ def solving_problem(running_mode):
                 "pre_wff": deepcopy(current_wff),
             }
             stack.append(literal_dic)
+            update_assign(assign_list, deepcopy(stack),True)
             counter =0
 
             finished = False
             found = False
             while (not finished):
-                #print "Current set value wff is " + str(current_wff)
-
-                current_wff = gen_new_wff(deepcopy(current_wff), stack)
+                print "Current set value wff is " + str(current_wff)
+                gen_new_wff(current_wff, assign_list)
 
                 if ("Failed" in current_wff):
                     #This assignment fails, generate new stack by recursion, reset wff
                     stack = gen_new_stack(stack)
+                    print "New stack is " +str(stack)
                     if (len(stack) > 0):
                         current_wff = stack[len(stack)-1]["pre_wff"]
+                        update_assign(assign_list, deepcopy(stack),True)
                 elif(len(current_wff) == 0):
                     # All clauses are satisfied. We found love!!!!!!!
+                    print "We sucess!!"
                     finished = True
                     found = True
                 else:
-                    #This assignment is ok, add new variable and do continue 
-                    new_var_name = current_wff[0][0]
-                    new_var_name = str(abs(int(new_var_name)))
-                    literal_dic = {
-                       "var_name": new_var_name,
-                        "assign": "0",
-                        "pre_wff": deepcopy(current_wff),
-                    }
-                    stack.append(literal_dic)
+                    #This assignment is ok, add new variable and do continue
+                    counter = 1-counter
+                    if (counter == 0): 
+                        new_var_name = current_wff[0][0]
+                        new_var_name = str(abs(int(new_var_name)))
+                        literal_dic = {
+                           "var_name": new_var_name,
+                            "assign": "0",
+                            "pre_wff": deepcopy(current_wff),
+                        }
+                        stack.append(literal_dic)
+                        print "We're good, continue adding " + new_var_name 
+                        update_assign(assign_list, deepcopy(stack), False)
+                    else:
+                        print "Check again"
+                    
 
                 if (len(stack)==0):
                     #The stack is empty, game over
+                    print "We failed"
                     finished = True
 
             time_taken = time.time()*1000000 - time_start
-            assgn_list = ["-1"]*int(p["var_num"])
+            assign_list = ["-1"]*int(p["var_num"])
             prediction = "U"
             pre_match = "0"
             if (found):
@@ -92,7 +104,7 @@ def solving_problem(running_mode):
                 s_wff += 1
                 for node in stack:
                     index = int(node["var_name"])-1
-                    assgn_list[index] = node["assign"]
+                    assign_list[index] = node["assign"]
             else:
                 u_wff += 1
             if (p["test_char"]!="?"):
@@ -112,7 +124,7 @@ def solving_problem(running_mode):
                 "prediction": prediction,
                 "pre_match": pre_match,
                 "time_taken": time_taken,
-                "assignment": assgn_list,
+                "assignment": assign_list,
             }
             gen_output_row(output_info)
     #end of all problem
@@ -127,42 +139,88 @@ def solving_problem(running_mode):
     }
     gen_last_row(last_line)
 
-#return ["Failed"] if there is one clause that is unsatifiable
-#return [] enpty list if all pass
-def gen_new_wff(current_wff, stack):
-    lit_dic = deepcopy(stack[len(stack) - 1])
-    #print "Current variable " + lit_dic["var_name"] + " with the assignment " + lit_dic["assign"]
-    new_wff = []
-    for clause in current_wff:
-        new_clause = gen_new_clause(clause, deepcopy(lit_dic))
-        if (len(new_clause)==0):
-            return ["Failed"]
-        elif ("true" not in new_clause):
-            new_wff.append(new_clause)
-    return new_wff
+
+def update_assign(assign_list, stack,init):
+    print "In update_assign, the original is " + str(assign_list)
+    if (init == True):
+        for i in range(len(assign_list)):
+            assign_list[i] = "-1"
+    for literal_dic in stack:
+        print "set " + literal_dic["var_name"] + " to " + literal_dic["assign"]
+        index = int(literal_dic["var_name"]) -1 
+        assign_list[index] = literal_dic["assign"]
+    print "The result is " + str(assign_list)
+
+
+# direct amend on current_wff ["Failed"] if there is one clause that is unsatifiable  [] enpty list if all pass
+def gen_new_wff(current_wff, assign_list):   
+    working_wff = deepcopy(current_wff)
+    for clause in working_wff:
+        gen_new_clause(clause, assign_list,current_wff)
+
+        print "current_wff is " + str(current_wff)
+        if (current_wff==["Failed"]):
+            print "We failed a case, pop"
+            break;
+    
+# this function only work for clause that contains one literal
+def force_assign(clause, assign_list,current_wff):
+    print "We're in forcing, current assign_list is " + str(assign_list)
+    n_clause = deepcopy(clause)
+    literal = n_clause[0]
+
+    print "The literal is " + literal
+
+    neg = ("-" in literal)
+    if (neg):
+        new_assign = "0"
+    else:
+        new_assign = "1"
+    index = abs(int(literal)) -1
+
+    print "The index is " + str(index) + " We go to " + assign_list[index]
+    if (assign_list[index] =="-1"):
+        print "We force " +str(index +1) + " to be " + new_assign 
+        assign_list[index] = new_assign
+        current_wff.remove(clause)
+    elif(assign_list[index]==new_assign):
+        print "Matched!"
+        current_wff.remove(clause) 
+    else:
+        print "Does't match"
+        current_wff[:] = ["Failed"]
+        print "Here the current_wff is " + str(current_wff)
 
 
 # return empty list if fail, return ["true"] if success, which should not be append to the new wff
-def gen_new_clause(clause, lit_dic):
-    #print "Current clause is : " + str(clause) 
-    variable = deepcopy(lit_dic["var_name"])
-    variable_inverse = "-" + variable
-    if (variable in clause):
-        if (lit_dic["assign"] == "1"):
-            return ["true"]
+def gen_new_clause(clause, assign_list,current_wff):
+    print "Current clause is : " + str(clause)
+    for literal in clause:
+        if (len(current_wff)==0):
+            break
+        elif (len(clause) == 1):
+            force_assign(clause, assign_list,current_wff)
         else:
-            clause.remove(variable)
-            return gen_new_clause(clause,lit_dic)
-    elif (variable_inverse in clause):
-        if (lit_dic["assign"] == "0"):
-            return ["true"]
-        else:
-            clause.remove(variable_inverse)
-            return gen_new_clause(clause,lit_dic)
-    else:
-        return clause
+            print "The assign_list is " +str(assign_list)
+            index = abs(int(literal))-1
+            if((assign_list[index]=="1" and "-" not in literal) or (assign_list[index]=="0" and "-" in literal)):
+                print literal +" is matched" + " WE sre moving " + str(clause)
+                if (clause in current_wff):
+                    current_wff.remove(clause)
+                print "After remove we have wff as " + str(current_wff) 
+            elif ((assign_list[index]=="1" and "-" in literal) or (assign_list[index]=="0" and "-" not in literal)):
+                print literal +" is removed, do forcing"
+                c_location = current_wff.index(clause)
+                current_wff[c_location].remove(literal)
+                clause.remove(literal)
+                print "Removed wff is "+ str(current_wff)
+                force_assign(clause, assign_list,current_wff)
+
+
+    print "End of a clause, here we have wff as " + str(current_wff) 
 
 def gen_new_stack(stack):
+    print " In gen_new_stack, the stack is " +str(stack)
     if (len(stack)<=0):
         return []
     else:
@@ -214,10 +272,7 @@ except:
     print "Cannot read the file"
 finally:
     test_file.close()
-    output_file_title = sys.argv[1].replace(".cnf",".csv")
-    output_file_title = "backtrack_"+output_file_title
-    output_file = open(output_file_title, "w")
-    
+    output_file = open(sys.argv[1].replace(".cnf",".csv"), "w")
 
 solving_problem(running_mode)
 output_file.close()
