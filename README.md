@@ -24,6 +24,6 @@ choice point stacks- we selected the first literal in the first clause which is 
 #6
 
 #7
-
+#Brute Force time complexity O(2^V*C*K)  ...//v=number of variables, c=number of clauses, k=number of literals per clause.
 #8
 For the relative complexity of the different solvers, especially as a function of the number of literals per clause.
