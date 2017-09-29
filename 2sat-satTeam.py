@@ -86,15 +86,15 @@ def solving_problem(running_mode):
                     finished = True
 
             time_taken = time.time()*1000000 - time_start
-            assign_list = ["-1"]*int(p["var_num"])
+            out_assign = []
             prediction = "U"
             pre_match = "0"
             if (found):
                 prediction = "S"
                 s_wff += 1
+                out_assign = assign_list
                 for node in stack:
                     index = int(node["var_name"])-1
-                    assign_list[index] = node["assign"]
             else:
                 u_wff += 1
             if (p["test_char"]!="?"):
@@ -114,7 +114,7 @@ def solving_problem(running_mode):
                 "prediction": prediction,
                 "pre_match": pre_match,
                 "time_taken": time_taken,
-                "assignment": assign_list,
+                "assignment": out_assign,
             }
             gen_output_row(output_info)
     #end of all problem
